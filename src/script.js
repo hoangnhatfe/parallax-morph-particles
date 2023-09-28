@@ -17,7 +17,7 @@ const gui = new dat.GUI()
 const container = document.createElement( 'div' );
 document.body.appendChild( container );
 const stats = new Stats();
-container.appendChild( stats.dom );
+// container.appendChild( stats.dom );
 
 
 const parameters = {
@@ -43,6 +43,8 @@ gui.addColor(parameters, 'mainMeshfromColor').onFinishChange(() => {
 gui.addColor(parameters, 'mainMeshToColor').onFinishChange(() => {
     colorOutside.set(parameters.mainMeshToColor)
 })
+gui.close()
+gui.hide()
 
 /**
  * Base
@@ -245,8 +247,7 @@ const changeGeometry = (curr) => {
 scroll.on('scroll', (args) => {
     if(typeof args.currentElements['section1'] === 'object') {
         let progress = args.currentElements['section1'].progress;
-        console.log('progress', progress)
-        if (progress > 0.7 && !triggerRandom) {
+        if (progress >= 0.7 && !triggerRandom) {
             triggerRandom = true
             updateParticles()
         }
@@ -256,23 +257,22 @@ scroll.on('scroll', (args) => {
     }
     if(typeof args.currentElements['section2'] === 'object') {
         let progress = args.currentElements['section2'].progress;
-        // console.log('progress2', progress)
-        if (progress > 0.5 && !triggerRandom) {
+        if (!triggerRandom && (progress > 0 || progress < 1)) {
             triggerRandom = true
             updateParticles()
         }
-        if (progress < 0.5 && triggerRandom) {
+        if (triggerRandom && (0.4 < progress && progress < 0.7)) {
             changeGeometry(1)
         }
     }
     if(typeof args.currentElements['section3'] === 'object') {
         let progress = args.currentElements['section3'].progress;
         // console.log('progress3', progress)
-        if (progress > 0.5 && !triggerRandom) {
+        if (!triggerRandom && (progress > 0 || progress < 1)) {
             triggerRandom = true
             updateParticles()
         }
-        if (progress < 0.5 && triggerRandom) {
+        if (triggerRandom && (progress > 0.3 && progress < 0.7)) {
             changeGeometry(2)
         }
     }
@@ -346,10 +346,11 @@ window.addEventListener('mousemove', (event) => {
  */
 const clock = new THREE.Clock()
 let previousTime = 0
+let delta = 0
+let interval = 1 / 900
 
 const tick = () =>
 {
-    
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
@@ -368,12 +369,17 @@ const tick = () =>
 
     // Render
     newparticlesPositions && updateParticlesPositions()
-    // renderer.render(scene, camera)
-    composer.render()
-    stats.update()
-
+    // stats.update()
+    // composer.render()
+    
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
+    delta += clock.getDelta()
+    if (delta  > interval) {
+        stats.update()
+        composer.render()
+        delta = delta % interval
+    }
 }
 
 tick()
