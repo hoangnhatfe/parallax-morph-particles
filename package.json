@@ -1,0 +1,19 @@
+{
+  "name": "parallax-morph-particles",
+  "private": false,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^4.3.9"
+  },
+  "dependencies": {
+    "gsap": "^3.12.2",
+    "lil-gui": "^0.18.1",
+    "locomotive-scroll": "^4.1.4",
+    "three": "^0.153.0"
+  }
+}
