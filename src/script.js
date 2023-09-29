@@ -369,17 +369,17 @@ const tick = () =>
 
     // Render
     newparticlesPositions && updateParticlesPositions()
-    // stats.update()
-    // composer.render()
+    stats.update()
+    composer.render()
     
     // Call tick again on the next frame
     window.requestAnimationFrame(tick)
-    delta += clock.getDelta()
-    if (delta  > interval) {
-        stats.update()
-        composer.render()
-        delta = delta % interval
-    }
+    // delta += clock.getDelta()
+    // if (delta  > interval) {
+    //     stats.update()
+    //     composer.render()
+    //     delta = delta % interval
+    // }
 }
 
 tick()
